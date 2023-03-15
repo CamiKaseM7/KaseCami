@@ -1,4 +1,5 @@
 import {
+    channelMention,
     ChannelType,
     ChatInputCommandInteraction,
     PermissionFlagsBits,
@@ -57,7 +58,12 @@ export default class Call extends Command {
             return element.guildId == channel.guildId;
         });
 
-        if (index >= 0) return interaction.reply(`Ya estas en la cola, posicion **${index + 1}**`);
+        if (index >= 0)
+            return interaction.reply(
+                `Este servidor ya está en la cola\nposicion**${index + 1}**\ncanal ${channelMention(
+                    call.annonQueue[index].channelId
+                )}`
+            );
 
         call.annonQueue.push({ guildId: member.guild!.id, channelId: channel.id });
         interaction.reply(`Tu posicion en la cola: ${call.annonQueue.length}`);
