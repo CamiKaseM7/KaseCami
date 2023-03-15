@@ -6,9 +6,9 @@ import {
     SlashCommandBuilder,
     VoiceBasedChannel,
 } from "discord.js";
-import PlayerManager from "../../../managers/PlayerManager";
-import AnnonCallManager from "../../../managers/AnnonCallManager";
-import Command, { Category } from "../../../structures/Command";
+import PlayerManager from "../../managers/PlayerManager";
+import AnnonCallManager from "../../managers/AnnonCallManager";
+import Command, { Category } from "../../structures/Command";
 import { createAudioResource, EndBehaviorType, getVoiceConnection, StreamType } from "@discordjs/voice";
 
 export default class Call extends Command {

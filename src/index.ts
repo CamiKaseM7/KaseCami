@@ -7,7 +7,7 @@ import Help from "./commands/Utility/Help";
 import Ping from "./commands/Utility/Ping";
 import Tts from "./commands/Voice/TTS/Tts";
 import TtsStop from "./commands/Voice/TTS/TtsStop";
-import Call from "./commands/Voice/Calls/Call";
+import Call from "./commands/Voice/Call";
 
 import InteractionHandler from "./handlers/InteractionHandler";
 import MessageHandler from "./handlers/MessageHandler";
