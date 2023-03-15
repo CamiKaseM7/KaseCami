@@ -25,7 +25,9 @@ export default class MessageHandler extends EventHandler<Events.MessageCreate> {
             });
         } catch (err) {
             console.log(err);
-            message.reply("Ocurrio un error el ejecutar ese comando.");
+            message.reply("Ocurrio un error el ejecutar ese comando.").catch((err) => {
+                console.log(err);
+            });
         }
     }
 }
