@@ -11,6 +11,8 @@ import Call from "./commands/Voice/Call";
 
 import InteractionHandler from "./handlers/InteractionHandler";
 import MessageHandler from "./handlers/MessageHandler";
+import { connectToDatabase } from "./database/connectToDatabase";
+import Block from "./commands/Root/Block";
 
 // import { generateDependencyReport } from "@discordjs/voice";
 
@@ -29,12 +31,16 @@ const partials = [Partials.Message, Partials.Channel, Partials.Reaction];
 
 const client = new DiscordClient(process.env.PREFIX ?? "¿", intents, partials);
 
+connectToDatabase();
+
 client.addCommand(new Ping(client));
 client.addCommand(new Help(client));
 
 client.addCommand(new Tts(client));
 client.addCommand(new TtsStop(client));
 client.addCommand(new Call(client));
+
+client.addCommand(new Block(client));
 
 client.registerEventHandler(Events.InteractionCreate, new InteractionHandler(client));
 client.registerEventHandler(Events.MessageCreate, new MessageHandler(client));

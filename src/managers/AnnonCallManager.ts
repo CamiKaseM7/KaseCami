@@ -1,11 +1,12 @@
-type channelInfo = {
+type queueElement = {
     guildId: string;
     channelId: string;
+    userId: string;
 };
 
 type callInfo = {
-    annonQueue: channelInfo[];
-    annonCurrent?: channelInfo;
+    annonQueue: queueElement[];
+    annonCurrent?: queueElement;
     channelId: string;
     guildId: string;
     callId: string;

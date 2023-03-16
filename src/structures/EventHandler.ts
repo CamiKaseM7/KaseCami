@@ -8,5 +8,5 @@ export default abstract class EventHandler<T extends keyof ClientEvents> {
         this.client = client;
     }
 
-    public abstract handle(a: ClientEvents[T]): void;
+    public abstract handle(a: ClientEvents[T]): void | Promise<void>;
 }

@@ -10,6 +10,7 @@ import PlayerManager from "../../managers/PlayerManager";
 import AnnonCallManager from "../../managers/AnnonCallManager";
 import Command, { Category } from "../../structures/Command";
 import { createAudioResource, EndBehaviorType, getVoiceConnection, StreamType } from "@discordjs/voice";
+import { BlockedUserModel } from "../../database/models/BlockedUserModel";
 
 export default class Call extends Command {
     public readonly category = Category.Voice;
@@ -51,8 +52,8 @@ export default class Call extends Command {
     }
 
     private async callJoin(interaction: ChatInputCommandInteraction): Promise<any> {
-        const memberId = interaction.user.id;
-        const member = await interaction.guild!.members.fetch(memberId);
+        const userId = interaction.user.id;
+        const member = await interaction.guild!.members.fetch(userId);
         const callId = interaction.options.getString("call-id", true);
 
         const channel = member.voice.channel ?? interaction.options.getChannel("channel");
@@ -62,17 +63,17 @@ export default class Call extends Command {
         if (!call) return interaction.reply("llamada no encontrada!");
 
         const index = call.annonQueue.findIndex((element) => {
-            return element.guildId == channel.guildId;
+            return element.userId == userId;
         });
 
         if (index >= 0)
             return interaction.reply(
-                `Este servidor ya está en la cola\nposicion **${index + 1}**\ncanal ${channelMention(
+                `Ya estas en la cola\nposicion **${index + 1}**\ncanal ${channelMention(
                     call.annonQueue[index].channelId
                 )}`
             );
 
-        call.annonQueue.push({ guildId: member.guild!.id, channelId: channel.id });
+        call.annonQueue.push({ guildId: member.guild!.id, channelId: channel.id, userId });
         interaction.reply(`Tu posicion en la cola: ${call.annonQueue.length}`);
     }
 
@@ -89,6 +90,10 @@ export default class Call extends Command {
         const next = call.annonQueue.shift();
         if (!next) return interaction.reply("No quedan mas personas en la cola");
 
+        const blockedUser = await BlockedUserModel.findOne({ userId: next.userId });
+        if (blockedUser) return interaction.reply("El usuario actual está bloqueado");
+
+        console.log(next);
         // annon
         const annonGuild = await this.client.guilds.fetch(next.guildId);
         const annonChannel = await annonGuild.channels.fetch(next.channelId);

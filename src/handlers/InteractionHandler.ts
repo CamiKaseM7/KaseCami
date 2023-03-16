@@ -1,9 +1,12 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, ClientEvents, Events } from "discord.js";
+import { BlockedUserModel } from "../database/models/BlockedUserModel";
 import EventHandler from "../structures/EventHandler";
 
 export default class InteractionHandler extends EventHandler<Events.InteractionCreate> {
-    public handle(args: ClientEvents[Events.InteractionCreate]): void {
+    public async handle(args: ClientEvents[Events.InteractionCreate]): Promise<void> {
         const [interaction] = args;
+        const blockedUser = await BlockedUserModel.findOne({ userId: interaction.user.id });
+        if (blockedUser) return;
 
         if (interaction.isCommand()) return this.handleCommand(interaction as ChatInputCommandInteraction);
         if (interaction.isAutocomplete())
