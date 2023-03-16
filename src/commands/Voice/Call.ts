@@ -36,6 +36,13 @@ export default class Call extends Command {
         const channel = member.voice.channel ?? interaction.options.getChannel("channel");
         if (!channel) return interaction.reply("Tienes que estar en un canal de voz o seleccionar uno!");
 
+        const existingCall = this.annonCallManager.getByGuildId(interaction.guildId!);
+        if (existingCall)
+            interaction.reply(
+                `Ya existe una llamada para este servidor\nid: ${
+                    existingCall.callId
+                }\nchannel: ${channelMention(existingCall.channelId)}`
+            );
         const player = this.playerManager.getOrCreate(interaction.guildId!);
         player.connect(channel);
 
@@ -52,7 +59,7 @@ export default class Call extends Command {
         if (!channel) return interaction.reply("Tienes que estar en un canal de voz o seleccionar uno!");
 
         const call = this.annonCallManager.getByCallId(callId);
-        if (!call) return interaction.reply("call not found!");
+        if (!call) return interaction.reply("llamada no encontrada!");
 
         const index = call.annonQueue.findIndex((element) => {
             return element.guildId == channel.guildId;
@@ -60,7 +67,7 @@ export default class Call extends Command {
 
         if (index >= 0)
             return interaction.reply(
-                `Este servidor ya está en la cola\nposicion**${index + 1}**\ncanal ${channelMention(
+                `Este servidor ya está en la cola\nposicion **${index + 1}**\ncanal ${channelMention(
                     call.annonQueue[index].channelId
                 )}`
             );
@@ -71,7 +78,7 @@ export default class Call extends Command {
 
     private async callNext(interaction: ChatInputCommandInteraction): Promise<any> {
         const call = this.annonCallManager.getByGuildId(interaction.guildId!);
-        if (!call) return interaction.reply("No call created for this server");
+        if (!call) return interaction.reply("No existen llamadas para este servidor");
 
         try {
             if (call.annonCurrent) getVoiceConnection(call.annonCurrent.guildId)?.destroy();
