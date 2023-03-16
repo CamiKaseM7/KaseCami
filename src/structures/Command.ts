@@ -13,6 +13,8 @@ export enum Category {
     Fun = "Fun",
     Config = "Config",
     Games = "Games",
+    Root = "Root",
+    Test = "Test",
 }
 
 export default abstract class Command {

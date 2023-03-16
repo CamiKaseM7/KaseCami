@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import { REST } from "@discordjs/rest";
 
-import Command from "./Command";
+import Command, { Category } from "./Command";
 import EventHandler from "../structures/EventHandler";
 import AnnonCallManager from "../managers/AnnonCallManager";
 
@@ -41,22 +41,33 @@ export default class DiscordClient extends Client {
         const user = this.user;
         if (user == null || this.token == null) throw new Error("Not logged in");
 
-        const jsonCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+        const userCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+        const rootCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
         this.commands.forEach((command) => {
             const json = command.commandBuilder().toJSON!();
-            jsonCommands.push(json);
+            if (command.category == Category.Root || command.category == Category.Test) {
+                rootCommands.push(json);
+            } else {
+                userCommands.push(json);
+            }
         });
 
         const rest = new REST({ version: "10" }).setToken(this.token);
 
         testServers.forEach(async (testServer) => {
+            if (testServer == "") return;
+
             await rest.put(Routes.applicationGuildCommands(user.id, testServer), {
-                body: jsonCommands,
+                body: userCommands,
+            });
+
+            await rest.put(Routes.applicationGuildCommands(user.id, testServer), {
+                body: rootCommands,
             });
         });
 
-        await rest.put(Routes.applicationCommands(user.id), { body: jsonCommands });
+        await rest.put(Routes.applicationCommands(user.id), { body: userCommands });
 
         console.log("Commands successfully deployed");
     }
