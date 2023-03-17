@@ -147,7 +147,7 @@ export default class Call extends Command {
             annonPlayer.play(audioResource);
         });
 
-        interaction.reply(`Siguiente...\nHay ${call.annonQueue.length} persona/s en la cola`);
+        interaction.reply(`Siguiente...\nQuedan ${call.annonQueue.length} persona/s en la cola`);
     }
 
     private callDelete(interaction: ChatInputCommandInteraction): any {
