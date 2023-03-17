@@ -39,7 +39,7 @@ export default class Call extends Command {
 
         const existingCall = this.annonCallManager.getByGuildId(interaction.guildId!);
         if (existingCall)
-            interaction.reply(
+            return interaction.reply(
                 `Ya existe una llamada para este servidor\nid: ${
                     existingCall.callId
                 }\nchannel: ${channelMention(existingCall.channelId)}`
@@ -145,7 +145,7 @@ export default class Call extends Command {
             annonPlayer.play(audioResource);
         });
 
-        interaction.reply("Siguiente...");
+        interaction.reply(`Siguiente...\nHay ${call.annonQueue} persona/s en la cola`);
     }
 
     public commandBuilder(): Partial<SlashCommandBuilder> {
