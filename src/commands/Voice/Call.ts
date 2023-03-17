@@ -25,6 +25,8 @@ export default class Call extends Command {
                 return this.callJoin(interaction);
             case "next":
                 return this.callNext(interaction);
+            case "delete":
+                return this.callDelete(interaction);
             default:
                 throw new Error("Unknown subcommand");
         }
@@ -148,6 +150,12 @@ export default class Call extends Command {
         interaction.reply(`Siguiente...\nHay ${call.annonQueue} persona/s en la cola`);
     }
 
+    private callDelete(interaction: ChatInputCommandInteraction): any {
+        const existing = this.annonCallManager.delete(interaction.guildId!);
+        if (!existing) return interaction.reply("No hay ninguna llamada creada para este servidor");
+        interaction.reply(`LLamada de id **${existing.callId}** borrada`);
+    }
+
     public commandBuilder(): Partial<SlashCommandBuilder> {
         return new SlashCommandBuilder()
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
@@ -186,6 +194,9 @@ export default class Call extends Command {
             )
             .addSubcommand((subcommand) =>
                 subcommand.setName("next").setDescription("makes the next user join the call")
+            )
+            .addSubcommand((subcommand) =>
+                subcommand.setName("delete").setDescription("deletes call on this server")
             );
     }
 }

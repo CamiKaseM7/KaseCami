@@ -33,7 +33,7 @@ export default class AnnonCallManager {
         return this.guildInfos.get(guildId);
     }
 
-    public create(guildId: string, channelId: string) {
+    public create(guildId: string, channelId: string): callInfo {
         const callId = this.generateId(5);
         const call = {
             annonQueue: [],
@@ -46,6 +46,16 @@ export default class AnnonCallManager {
         this.callInfos.set(callId, guildId);
 
         return call;
+    }
+
+    public delete(guildId: string): callInfo | undefined {
+        const existing = this.guildInfos.get(guildId);
+        if (!existing) return undefined;
+
+        this.guildInfos.delete(guildId);
+        this.callInfos.delete(existing.callId);
+
+        return existing;
     }
 
     private generateId(length: number): string {
