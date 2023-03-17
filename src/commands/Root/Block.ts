@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, CacheType, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, CacheType, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import { BlockedUserModel } from "../../database/models/BlockedUserModel";
 import Command, { Category } from "../../structures/Command";
 
@@ -17,6 +17,7 @@ export default class Block extends Command {
     public commandBuilder(): Partial<SlashCommandBuilder> {
         return new SlashCommandBuilder()
             .setDMPermission(false)
+            .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
             .setName("block")
             .setDescription("Block user from using the bot")
             .addUserOption((option) =>
