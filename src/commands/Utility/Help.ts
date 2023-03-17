@@ -3,6 +3,7 @@ import {
     ChatInputCommandInteraction,
     Message,
     SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
 } from "discord.js";
 import Command from "../../structures/Command";
 
@@ -17,20 +18,27 @@ export default class Help extends Command {
         this.executor(message);
     }
 
-    private executor(_caller: Message | ChatInputCommandInteraction) {
+    private executor(caller: Message | ChatInputCommandInteraction) {
         const commands = this.client.commands;
 
         const options = commands.map((command) => {
-            const usage = command.commandBuilder().options?.map((option) => {
+            const usage = command.commandBuilder().options?.map((option, index, array) => {
                 const optionJSON = option.toJSON();
+
+                if (option instanceof SlashCommandSubcommandBuilder) {
+                    let res = index == 0 ? `<${optionJSON.name}` : `| ${optionJSON.name}`;
+                    if (array.length - 1 == index) res += ">";
+                    return res;
+                }
                 return optionJSON.required ? `<${optionJSON.name}>` : `[${optionJSON.name}]`;
             });
 
             chatInputApplicationCommandMention(command.commandBuilder().name!, "");
 
-            return `${command.commandBuilder().name} ${usage?.join(" ")}`;
+            return `/**${command.commandBuilder().name}** ${usage?.join(" ")}`;
         });
 
+        caller.reply(options.join("\n"));
         console.log(options);
     }
 
