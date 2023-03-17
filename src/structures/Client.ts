@@ -59,10 +59,6 @@ export default class DiscordClient extends Client {
             if (testServer == "") return;
 
             await rest.put(Routes.applicationGuildCommands(user.id, testServer), {
-                body: userCommands,
-            });
-
-            await rest.put(Routes.applicationGuildCommands(user.id, testServer), {
                 body: rootCommands,
             });
         });
