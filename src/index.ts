@@ -13,6 +13,7 @@ import InteractionHandler from "./handlers/InteractionHandler";
 import MessageHandler from "./handlers/MessageHandler";
 import { connectToDatabase } from "./database/connectToDatabase";
 import Block from "./commands/Root/Block";
+import Eval from "./commands/Root/Eval";
 
 // import { generateDependencyReport } from "@discordjs/voice";
 
@@ -41,6 +42,7 @@ client.addCommand(new TtsStop(client));
 client.addCommand(new Call(client));
 
 client.addCommand(new Block(client));
+client.addCommand(new Eval(client));
 
 client.registerEventHandler(Events.InteractionCreate, new InteractionHandler(client));
 client.registerEventHandler(Events.MessageCreate, new MessageHandler(client));
