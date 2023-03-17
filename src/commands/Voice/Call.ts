@@ -64,6 +64,9 @@ export default class Call extends Command {
         const call = this.annonCallManager.getByCallId(callId);
         if (!call) return interaction.reply("llamada no encontrada!");
 
+        if (call.guildId == interaction.guildId!)
+            return interaction.reply("No puedes unirte a esta llamada, es de este mismo servidor");
+
         const index = call.annonQueue.findIndex((element) => {
             return element.userId == userId;
         });
