@@ -6,6 +6,8 @@ import Command, { Category } from "../../../structures/Command";
 import PlayerManager from "../../../managers/PlayerManager";
 
 export default class Tts extends Command {
+    readonly onlySlash = false;
+
     public readonly category = Category.Voice;
 
     private readonly pollyClient = new Polly({});

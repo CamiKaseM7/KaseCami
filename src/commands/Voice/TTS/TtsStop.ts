@@ -4,6 +4,8 @@ import Command, { Category } from "../../../structures/Command";
 import PlayerManager from "../../../managers/PlayerManager";
 
 export default class TtsStop extends Command {
+    readonly onlySlash = false;
+
     public readonly category = Category.Voice;
     private readonly playerManager = PlayerManager.getInstance();
 

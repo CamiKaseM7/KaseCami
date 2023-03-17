@@ -20,6 +20,7 @@ export enum Category {
 export default abstract class Command {
     readonly category: Category | undefined;
     readonly client: DiscordClient;
+    readonly onlySlash: boolean = true;
 
     constructor(client: DiscordClient) {
         this.client = client;

@@ -3,6 +3,8 @@ import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "disco
 import Command from "../../structures/Command";
 
 export default class Ping extends Command {
+    readonly onlySlash = false;
+
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
         let connection: VoiceConnection | undefined;
         if (interaction.guildId) connection = getVoiceConnection(interaction.guildId);

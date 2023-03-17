@@ -13,7 +13,7 @@ export default class MessageHandler extends EventHandler<Events.MessageCreate> {
 
         const command = this.client.commands.get(commandName);
         if (command == undefined) return;
-
+        if (command.onlySlash) return;
         try {
             if (!command.messageExecutor) return;
             const result = command.messageExecutor(message, msgArgs);

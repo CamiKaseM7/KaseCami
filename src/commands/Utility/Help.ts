@@ -7,6 +7,8 @@ import {
 import Command from "../../structures/Command";
 
 export default class Help extends Command {
+    readonly onlySlash = false;
+
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
         this.executor(interaction);
     }
