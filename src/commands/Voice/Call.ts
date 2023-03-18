@@ -118,7 +118,7 @@ export default class Call extends Command {
 
         // call
         const annonReceiver = annonConnection.receiver;
-        const mainReceiver = hostConnection.receiver;
+        const hostReceiver = hostConnection.receiver;
 
         annonReceiver.speaking.on("start", (userId) => {
             const subscription = annonReceiver.subscribe(userId, {
@@ -135,8 +135,8 @@ export default class Call extends Command {
             hostPlayer.play(audioResource);
         });
 
-        mainReceiver.speaking.on("start", (userId) => {
-            const subscription = mainReceiver.subscribe(userId, {
+        hostReceiver.speaking.on("start", (userId) => {
+            const subscription = hostReceiver.subscribe(userId, {
                 end: {
                     behavior: EndBehaviorType.AfterInactivity,
                     duration: 100,
