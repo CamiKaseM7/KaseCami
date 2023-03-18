@@ -161,8 +161,10 @@ export default class Call extends Command {
         const hostGuildId = existing.guildId;
         const annonGuildId = existing.annonCurrent?.guildId;
 
-        getVoiceConnection(hostGuildId)?.destroy();
-        annonGuildId && getVoiceConnection(annonGuildId)?.destroy();
+        try {
+            getVoiceConnection(hostGuildId)?.destroy();
+            annonGuildId && getVoiceConnection(annonGuildId)?.destroy();
+        } catch (err) {}
     }
 
     public commandBuilder(): Partial<SlashCommandBuilder> {
