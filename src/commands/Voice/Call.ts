@@ -115,11 +115,11 @@ export default class Call extends Command {
 
         const hostPlayer = this.playerManager.getOrCreate(call.guildId);
         const hostConnection = hostPlayer.connect(hostChannel as VoiceBasedChannel);
-
         // call
         const annonReceiver = annonConnection.receiver;
         const hostReceiver = hostConnection.receiver;
 
+        annonReceiver.speaking.removeAllListeners();
         annonReceiver.speaking.on("start", (userId) => {
             const subscription = annonReceiver.subscribe(userId, {
                 end: {
@@ -135,6 +135,7 @@ export default class Call extends Command {
             hostPlayer.play(audioResource);
         });
 
+        hostReceiver.speaking.removeAllListeners();
         hostReceiver.speaking.on("start", (userId) => {
             const subscription = hostReceiver.subscribe(userId, {
                 end: {
