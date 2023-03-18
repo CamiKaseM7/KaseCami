@@ -2,7 +2,6 @@ import {
     channelMention,
     ChannelType,
     ChatInputCommandInteraction,
-    PermissionFlagsBits,
     SlashCommandBuilder,
     VoiceBasedChannel,
 } from "discord.js";
