@@ -162,7 +162,6 @@ export default class Call extends Command {
 
     public commandBuilder(): Partial<SlashCommandBuilder> {
         return new SlashCommandBuilder()
-            .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
             .setDMPermission(false)
             .setName("call")
             .setDescription("manage/join annonymous calls")
