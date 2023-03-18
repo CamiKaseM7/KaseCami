@@ -157,6 +157,12 @@ export default class Call extends Command {
         const existing = this.annonCallManager.delete(interaction.guildId!);
         if (!existing) return interaction.reply("No hay ninguna llamada creada para este servidor");
         interaction.reply(`LLamada de id **${existing.callId}** borrada`);
+
+        const hostGuildId = existing.guildId;
+        const annonGuildId = existing.annonCurrent?.guildId;
+
+        getVoiceConnection(hostGuildId)?.destroy();
+        annonGuildId && getVoiceConnection(annonGuildId)?.destroy();
     }
 
     public commandBuilder(): Partial<SlashCommandBuilder> {
