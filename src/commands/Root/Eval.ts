@@ -1,6 +1,5 @@
 import {
     ChatInputCommandInteraction,
-    CacheType,
     SlashCommandBuilder,
     PermissionFlagsBits,
     EmbedBuilder,
@@ -10,7 +9,7 @@ import Command, { Category } from "../../structures/Command";
 export default class Eval extends Command {
     readonly category = Category.Root;
 
-    public async slashExecutor(interaction: ChatInputCommandInteraction<CacheType>): Promise<void> {
+    public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
         const code = interaction.options.getString("code", true);
 
         let result: any;

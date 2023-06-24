@@ -22,9 +22,9 @@ export default class Tts extends Command {
     }
 
     public async messageExecutor(message: Message, args: string[]): Promise<void> {
-        let voice = this.DEFAULT_VOICE;
+        let voice: VoiceId = this.DEFAULT_VOICE;
 
-        if (args[0] in VoiceId) {
+        if (args[0] in VoiceId) {            
             voice = args[0] as VoiceId;
             args.shift();
         }

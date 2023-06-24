@@ -11,13 +11,11 @@ import { REST } from "@discordjs/rest";
 
 import Command, { Category } from "./Command";
 import EventHandler from "../structures/EventHandler";
-import AnnonCallManager from "../managers/AnnonCallManager";
 
 export default class DiscordClient extends Client {
     public readonly commands = new Collection<string, Command>();
     public readonly prefix: string;
-
-    public readonly annonCalls = new AnnonCallManager();
+    public readonly commandIds = new Map<string, string>();
     public readonly whitelist = ["285417245667229697"];
 
     constructor(prefix: string, intents: GatewayIntentBits[], partials: Partials[]) {
@@ -66,5 +64,20 @@ export default class DiscordClient extends Client {
         await rest.put(Routes.applicationCommands(user.id), { body: userCommands });
 
         console.log("Commands successfully deployed");
+        this.fetchCommands();
+    }
+
+    public async fetchCommands(): Promise<void> {
+        const user = this.user;
+        if (user == null || this.token == null) throw new Error("Not logged in");
+        const rest = new REST({ version: "10" }).setToken(this.token);
+
+        const res = (await rest.get(Routes.applicationCommands(user.id))) as {id: string, name:string}[];
+
+        this.commandIds.clear(); 
+
+        res.forEach(command => {
+            this.commandIds.set(command.name, command.id);
+        })
     }
 }

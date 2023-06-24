@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 
 import DiscordClient from "./structures/Client";
 
+import Ags from "./commands/Utility/Ags";
 import Help from "./commands/Utility/Help";
 import Ping from "./commands/Utility/Ping";
 import Tts from "./commands/Voice/TTS/Tts";
 import TtsStop from "./commands/Voice/TTS/TtsStop";
-import Call from "./commands/Voice/Call";
 
 import InteractionHandler from "./handlers/InteractionHandler";
 import MessageHandler from "./handlers/MessageHandler";
@@ -34,12 +34,12 @@ const client = new DiscordClient(process.env.PREFIX ?? "¿", intents, partials);
 
 connectToDatabase();
 
+client.addCommand(new Ags(client));
 client.addCommand(new Ping(client));
 client.addCommand(new Help(client));
 
 client.addCommand(new Tts(client));
 client.addCommand(new TtsStop(client));
-client.addCommand(new Call(client));
 
 client.addCommand(new Block(client));
 client.addCommand(new Eval(client));
@@ -53,4 +53,5 @@ client.once(Events.ClientReady, (client) => {
     // console.log(generateDependencyReport());
     console.log(`Bot ${client.user.username} is ready.`);
     (client as DiscordClient).deployCommands(process.env.TEST_SERVERS?.split("/") ?? []);
+    // (client as DiscordClient).fetchCommands();
 });

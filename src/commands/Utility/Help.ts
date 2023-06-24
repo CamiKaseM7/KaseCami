@@ -5,7 +5,7 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
 } from "discord.js";
-import Command from "../../structures/Command";
+import Command, { Category } from "../../structures/Command";
 
 export default class Help extends Command {
     readonly onlySlash = false;
@@ -20,8 +20,9 @@ export default class Help extends Command {
 
     private executor(caller: Message | ChatInputCommandInteraction) {
         const commands = this.client.commands;
+        const commandIds = this.client.commandIds;
 
-        const options = commands.map((command) => {
+        const options = commands.filter((command) => command.category != Category.Root).map((command) => {
             const usage = command.commandBuilder().options?.map((option, index, array) => {
                 const optionJSON = option.toJSON();
 
@@ -32,14 +33,15 @@ export default class Help extends Command {
                 }
                 return optionJSON.required ? `<${optionJSON.name}>` : `[${optionJSON.name}]`;
             });
+            
+            const commandName = command.commandBuilder().name!
+            const commandId = commandIds.get(commandName)!;
 
-            chatInputApplicationCommandMention(command.commandBuilder().name!, "");
-
-            return `/**${command.commandBuilder().name}** ${usage?.join(" ")}`;
+            const commandMention = chatInputApplicationCommandMention(commandName, commandId);
+            return `${commandMention} ${usage?.join(" ")}`;
         });
 
         caller.reply(options.join("\n"));
-        console.log(options);
     }
 
     public commandBuilder(): Partial<SlashCommandBuilder> {

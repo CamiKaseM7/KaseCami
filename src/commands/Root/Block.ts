@@ -1,19 +1,25 @@
-import { ChatInputCommandInteraction, CacheType, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { BlockedUserModel } from "../../database/models/BlockedUserModel";
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import { UserModel } from "../../database/models/UserModel";
 import Command, { Category } from "../../structures/Command";
 
 export default class Block extends Command {
     readonly category = Category.Root;
 
-    public async slashExecutor(interaction: ChatInputCommandInteraction<CacheType>): Promise<any> {
+    public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<any> {
         const user = interaction.options.getUser("user", true);
         const reason = interaction.options.getString("reason", false);
 
-        const blockedUser = await BlockedUserModel.findOne({ userId: user.id });
-        if (blockedUser) return interaction.reply("User already blocked.");
-        await BlockedUserModel.create({ userId: user.id, reason });
+        const query = { userId: user.id };
+        const update = { blacklisted: true, reason };
+        const options = { upsert: true, setDefaultsOnInsert: true };
+
+        const blockedUser = await UserModel.findOne(query);
+        if (blockedUser?.blacklisted) return interaction.reply("User already blocked.");
+
+        UserModel.findOneAndUpdate(query, update, options);        
         interaction.reply(`**${user.username}** blocked with reason: \n>>> ${reason}`);
     }
+
     public commandBuilder(): Partial<SlashCommandBuilder> {
         return new SlashCommandBuilder()
             .setDMPermission(false)
