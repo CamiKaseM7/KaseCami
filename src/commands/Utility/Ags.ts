@@ -31,13 +31,12 @@ export default class Ags extends Command {
 
     public static async claimCommand(interaction: ChatInputCommandInteraction): Promise<void> {
         let code = interaction.options.getString("code", false);
-        interaction.deferReply();
+        await interaction.deferReply();
         if (!code) {
             const attachment = interaction.options.getAttachment("image", false)
             if (attachment) {
                 const result = await Tesseract.recognize(attachment.url);
                 code = result.data.text.replaceAll("\n","").replaceAll("'", "!").replaceAll(":", "");
-                console.log(result.data.text);
             }
         }
         if (!code) {
