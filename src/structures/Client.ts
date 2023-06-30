@@ -64,7 +64,6 @@ export default class DiscordClient extends Client {
         await rest.put(Routes.applicationCommands(user.id), { body: userCommands });
 
         console.log("Commands successfully deployed");
-        this.fetchCommands();
     }
 
     public async fetchCommands(): Promise<void> {
@@ -79,5 +78,6 @@ export default class DiscordClient extends Client {
         res.forEach(command => {
             this.commandIds.set(command.name, command.id);
         })
+        console.log(this.commandIds);
     }
 }

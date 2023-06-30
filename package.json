@@ -22,7 +22,8 @@
         "libsodium-wrappers": "^0.7.11",
         "mongoose": "^7.0.2",
         "prismjs": "^1.29.0",
-        "sodium": "^3.0.2"
+        "sodium": "^3.0.2",
+        "tesseract.js": "^4.1.1"
     },
     "devDependencies": {
         "ts-node": "^10.9.1",

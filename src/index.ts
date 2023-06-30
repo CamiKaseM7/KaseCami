@@ -30,7 +30,7 @@ const intents = [
 
 const partials = [Partials.Message, Partials.Channel, Partials.Reaction];
 
-const client = new DiscordClient(process.env.PREFIX ?? "¿", intents, partials);
+export const client = new DiscordClient(process.env.PREFIX ?? "¿", intents, partials);
 
 connectToDatabase();
 
@@ -53,5 +53,5 @@ client.once(Events.ClientReady, (client) => {
     // console.log(generateDependencyReport());
     console.log(`Bot ${client.user.username} is ready.`);
     (client as DiscordClient).deployCommands(process.env.TEST_SERVERS?.split("/") ?? []);
-    // (client as DiscordClient).fetchCommands();
+    (client as DiscordClient).fetchCommands();
 });

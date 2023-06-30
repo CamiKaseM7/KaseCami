@@ -4,6 +4,7 @@ import {
     Message,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder,
 } from "discord.js";
 import Command, { Category } from "../../structures/Command";
 
@@ -22,29 +23,47 @@ export default class Help extends Command {
         const commands = this.client.commands;
         const commandIds = this.client.commandIds;
 
-        const options = commands.filter((command) => command.category != Category.Root).map((command) => {
-            const usage = command.commandBuilder().options?.map((option, index, array) => {
-                const optionJSON = option.toJSON();
-
-                if (option instanceof SlashCommandSubcommandBuilder) {
-                    let res = index == 0 ? `<${optionJSON.name}` : `| ${optionJSON.name}`;
-                    if (array.length - 1 == index) res += ">";
-                    return res;
-                }
-                return optionJSON.required ? `<${optionJSON.name}>` : `[${optionJSON.name}]`;
-            });
-            
+        const options = commands.filter((command) => command.category != Category.Root).map((command) => {            
             const commandName = command.commandBuilder().name!
             const commandId = commandIds.get(commandName)!;
-
-            const commandMention = chatInputApplicationCommandMention(commandName, commandId);
-            return `${commandMention} ${usage?.join(" ")}`;
+            return this.generateHelpMessage(command.commandBuilder(), commandName, commandId);
         });
 
         caller.reply(options.join("\n"));
     }
 
-    public commandBuilder(): Partial<SlashCommandBuilder> {
+    private generateHelpMessage(command: Partial<SlashCommandSubcommandBuilder | SlashCommandBuilder | SlashCommandSubcommandGroupBuilder>, name: string, id: string): string {
+        const options = command.options;
+        const emptyOptions = options?.length == 0;
+        if (!options || emptyOptions) {
+            return chatInputApplicationCommandMention(name, id);
+        }
+
+        // es suficiente checkear el primero porque si no es subcommand ni subgroup
+        // entonces todos son opciones base
+        const isSubCommand = options[0] instanceof SlashCommandSubcommandBuilder;
+        const isSubCommandGroup = options[0] instanceof SlashCommandSubcommandGroupBuilder;
+        if (!isSubCommand && !isSubCommandGroup) {
+            const usage = options.map((option) => {
+                const optionJSON = option.toJSON();
+                return optionJSON.required ? `<${optionJSON.name}>` : `[${optionJSON.name}]`;
+            });
+
+            const commandMention = chatInputApplicationCommandMention(name, id);
+            return `${commandMention} ${usage.join(" ")}`;
+        }
+
+        return options.map(option => {
+            const isSubCommand = option instanceof SlashCommandSubcommandBuilder;
+            const isSubCommandGroup = option instanceof SlashCommandSubcommandGroupBuilder;
+            if (!isSubCommand && !isSubCommandGroup) return "";
+
+            const optionJSON = option.toJSON();
+            return this.generateHelpMessage(option, `${name} ${optionJSON.name}`, id);
+        }).filter(str => str != "").join("\n");
+    }
+
+    public commandBuilder(): SlashCommandBuilder {
         return new SlashCommandBuilder().setDMPermission(true).setName("help").setDescription("get help");
     }
 }
