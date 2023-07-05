@@ -59,6 +59,16 @@ export default class Ags extends Command {
         return results.join("");
     }
 
+    private static extractText(html: string): string {
+        const regex = new RegExp(/([<][a-z][^<]*>)|([<][\/][a-z]*>)/g);
+        return html.replaceAll("\n", "")
+            .replaceAll("</", " </") // esto puede agregar doble espacio si ya tenia uno de antes
+            .replaceAll("<br> ", "\n")
+            .replaceAll(regex, "")
+            .replaceAll("  ", " ") // sacar los espacios dobles
+            .replaceAll("\n ", "\n") // evitar que una linea arranque con un espacio
+    }
+
     private static async claim(token: string, code: string): Promise<string> {
         try {
             const data = await fetch(`https://app.argentinagameshow.com/custom/ajax/reward2.php?action=code&code=${code}`, {
@@ -67,7 +77,7 @@ export default class Ags extends Command {
                 }
             })
             const json: { text: string } = await data.json();
-            return json.text;
+            return Ags.extractText(json.text).split("\n")[0];
         } catch (e) {
             console.log(e);
             return "Error interno";
