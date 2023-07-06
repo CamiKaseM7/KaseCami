@@ -67,6 +67,8 @@ export default class Ags extends Command {
             .replaceAll(regex, "")
             .replaceAll("  ", " ") // sacar los espacios dobles
             .replaceAll("\n ", "\n") // evitar que una linea arranque con un espacio
+            .replaceAll("\r", "")
+            .replaceAll(/^\s*/g, "");
     }
 
     private static async claim(token: string, code: string): Promise<string> {
