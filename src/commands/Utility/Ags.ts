@@ -55,7 +55,7 @@ export default class Ags extends Command {
             return `<@${user.userId}>: ${res}`
         });
         
-        const results = await Promise.all(promises.flatMap(i => [i,i]));
+        const results = await Promise.all(promises);
         return results.join("\n");
     }
 
