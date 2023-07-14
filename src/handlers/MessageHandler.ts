@@ -1,6 +1,6 @@
 import { ClientEvents, Events } from "discord.js";
 import EventHandler from "./EventHandler";
-import { findCode } from "./findCode";
+import Ags from "../commands/Utility/Ags";
 import { client } from "..";
 
 export default class MessageHandler extends EventHandler<Events.MessageCreate> {
@@ -9,7 +9,7 @@ export default class MessageHandler extends EventHandler<Events.MessageCreate> {
         
         try {
             if (message.author.id == client.user!.id) return;
-            if (message.channelId == "1096544364777459742") findCode(message);
+            if (message.channelId == "1096544364777459742") Ags.findCode(message);
             if (message.author.bot) return;
 
             const prefix = this.client.prefix;

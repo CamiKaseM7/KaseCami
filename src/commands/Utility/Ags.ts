@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "discord.js";
 import Command from "../Command";
 import { UserModel } from "../../database/models/UserModel";
 import { User } from "../../database/interfaces/UserInterface";
@@ -114,6 +114,31 @@ export default class Ags extends Command {
         const token = user.agsToken!;
         const res = await Ags.claim(token, code);
         return res != AgsResponses.INVALID_CODE;
+    }
+
+    public static async findCode(message: Message<boolean>) {
+        const words = message.content.split("\n").map(line => 
+            line.replaceAll(":", " ")
+                .replaceAll(">", " ")
+                .replaceAll("*", "")
+                .replaceAll("<", " ")
+                .split(" ")).flat();
+        const regex = new RegExp(/[A-Z]+[a-z]+[A-Z]/);
+        const filteredWords = words.filter(word => regex.test(word));
+    
+        const promises: Promise<string>[] = filteredWords.map(async (word) => {
+            const validCode = await Ags.checkCode(word);
+            if (!validCode) return "";
+            let res = `Code **${word}**:\n`;
+            res += await Ags.claimForAll(word);
+            return res;
+        });
+    
+        const results = await Promise.all(promises);
+        const replyMessage = results.filter(res => res !== "").join("\n");
+        if (replyMessage !== "") {
+            message.reply(replyMessage);
+        }
     }
 
     public commandBuilder(): Partial<SlashCommandBuilder> {
