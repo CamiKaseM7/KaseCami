@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "discord.js";
 import { AudioPlayerStatus } from "@discordjs/voice";
-import Command, { Category } from "../../../structures/Command";
+import Command, { Category } from "../../Command";
 import PlayerManager from "../../../managers/PlayerManager";
 
 export default class TtsStop extends Command {

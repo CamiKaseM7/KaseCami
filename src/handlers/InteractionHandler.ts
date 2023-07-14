@@ -1,6 +1,6 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, ClientEvents, Events } from "discord.js";
 import { UserModel } from "../database/models/UserModel";
-import EventHandler from "../structures/EventHandler";
+import EventHandler from "./EventHandler";
 
 export default class InteractionHandler extends EventHandler<Events.InteractionCreate> {
     public async handle(args: ClientEvents[Events.InteractionCreate]): Promise<void> {

@@ -4,7 +4,7 @@ import {
     Message,
     SlashCommandBuilder,
 } from "discord.js";
-import DiscordClient from "./Client";
+import DiscordClient from "../Client";
 
 export enum Category {
     Voice = "Voice",

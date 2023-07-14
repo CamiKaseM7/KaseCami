@@ -1,5 +1,5 @@
 import { Collection } from "discord.js";
-import VoicePlayer from "../structures/VoicePlayer";
+import VoicePlayer from "../commands/Voice/VoicePlayer";
 
 export default class PlayerManager extends Collection<string, VoicePlayer> {
     private readonly cleanInterval = 1_000 * 60 * 5;

@@ -6,7 +6,7 @@ import {
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
 } from "discord.js";
-import Command, { Category } from "../../structures/Command";
+import Command, { Category } from "../Command";
 
 export default class Help extends Command {
     readonly onlySlash = false;

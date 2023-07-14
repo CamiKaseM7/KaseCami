@@ -2,7 +2,7 @@ import { Polly, VoiceId } from "@aws-sdk/client-polly";
 import { Readable } from "stream";
 import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "discord.js";
 import { AudioPlayerStatus, createAudioResource } from "@discordjs/voice";
-import Command, { Category } from "../../../structures/Command";
+import Command, { Category } from "../../Command";
 import PlayerManager from "../../../managers/PlayerManager";
 
 export default class Tts extends Command {

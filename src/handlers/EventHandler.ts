@@ -1,5 +1,5 @@
 import { ClientEvents } from "discord.js";
-import DiscordClient from "../structures/Client";
+import DiscordClient from "../Client";
 
 export default abstract class EventHandler<T extends keyof ClientEvents> {
     readonly client;

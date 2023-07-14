@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import Command from "../../structures/Command";
+import Command from "../Command";
 import { UserModel } from "../../database/models/UserModel";
 import { User } from "../../database/interfaces/UserInterface";
 import Tesseract from 'tesseract.js';
@@ -11,7 +11,7 @@ enum AgsResponses {
     INVALID_TOKEN = "Tenes que estar logeado para poder canjear un código.",
 }
 
-const hasToken = { agsToken: { $ne: null } };
+const HAS_TOKEN_QUERY = { agsToken: { $ne: null } };
 
 export default class Ags extends Command {
     // readonly category = Category.Test;
@@ -43,20 +43,35 @@ export default class Ags extends Command {
             interaction.editReply("No pasaste ningun codigo master");
             return;
         }
-        const msg = await Ags.claimForAll(code);
+        const msg = await this.claimForAll(code);
         interaction.editReply(`Code: **${code}**:\n${msg}`);
     }
 
     public static async claimForAll(code: string): Promise<string> {
-        const users: User[] = await UserModel.find(hasToken);
+        const users: User[] = await UserModel.find(HAS_TOKEN_QUERY);
 
         const promises: Promise<string>[] = users.map(async (user) => {
-            const res = await Ags.claim(user.agsToken!, code);
-            return `<@${user.userId}>: ${res}\n`
+            const res = await this.claim(user.agsToken!, code);
+            return `<@${user.userId}>: ${res}`
         });
+        
+        const results = await Promise.all(promises.flatMap(i => [i,i]));
+        return results.join("\n");
+    }
 
-        const results = await Promise.all(promises);
-        return results.join("");
+    private static async claim(token: string, code: string): Promise<string> {
+        try {
+            const data = await fetch(`https://app.argentinagameshow.com/custom/ajax/reward2.php?action=code&code=${code}`, {
+                headers: {
+                    'Cookie': `PHPSESSID=${token}`
+                }
+            })
+            const json: { text: string } = await data.json();
+            return this.extractText(json.text).split("\n")[0];
+        } catch (e) {
+            console.log(e);
+            return "Error interno";
+        }
     }
 
     private static extractText(html: string): string {
@@ -69,21 +84,6 @@ export default class Ags extends Command {
             .replaceAll("\n ", "\n") // evitar que una linea arranque con un espacio
             .replaceAll("\r", "")
             .replaceAll(/^\s*/g, "");
-    }
-
-    private static async claim(token: string, code: string): Promise<string> {
-        try {
-            const data = await fetch(`https://app.argentinagameshow.com/custom/ajax/reward2.php?action=code&code=${code}`, {
-                headers: {
-                    'Cookie': `PHPSESSID=${token}`
-                }
-            })
-            const json: { text: string } = await data.json();
-            return Ags.extractText(json.text).split("\n")[0];
-        } catch (e) {
-            console.log(e);
-            return "Error interno";
-        }
     }
 
     public static async linkCommand(interaction: ChatInputCommandInteraction): Promise<void> {
@@ -106,7 +106,7 @@ export default class Ags extends Command {
     }
 
     public static async checkCode(code: string): Promise<boolean> {
-        const users = await UserModel.find(hasToken);
+        const users = await UserModel.find(HAS_TOKEN_QUERY);
 
         const randomUserIndex = Math.floor(users.length * Math.random());
         const user = users[randomUserIndex];

@@ -3,7 +3,7 @@ import Ags from "../commands/Utility/Ags";
 
 export async function findCode(message: Message<boolean>) {
     const words = message.content.split("\n").map(line => line.replaceAll(":", " ").replaceAll(">", " ").replaceAll("*", "").replaceAll("<", " ").split(" ")).flat();
-    const regex = new RegExp(/([A-Z]+[a-z]+[A-Z]+)|([a-z-A-Z]+![0-9]+)/);
+    const regex = new RegExp(/[A-Z]+[a-z]+[A-Z]/);
     const filteredWords = words.filter(word => regex.test(word));
 
     const promises: Promise<string>[] = filteredWords.map(async (word) => {

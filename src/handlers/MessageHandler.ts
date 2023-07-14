@@ -1,5 +1,5 @@
 import { ClientEvents, Events } from "discord.js";
-import EventHandler from "../structures/EventHandler";
+import EventHandler from "./EventHandler";
 import { findCode } from "./findCode";
 import { client } from "..";
 

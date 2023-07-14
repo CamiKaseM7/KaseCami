@@ -4,7 +4,7 @@ import {
     PermissionFlagsBits,
     EmbedBuilder,
 } from "discord.js";
-import Command, { Category } from "../../structures/Command";
+import Command, { Category } from "../Command";
 
 export default class Eval extends Command {
     readonly category = Category.Root;

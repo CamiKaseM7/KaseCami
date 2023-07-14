@@ -1,7 +1,7 @@
 import { Events, IntentsBitField, Partials } from "discord.js";
 import dotenv from "dotenv";
 
-import DiscordClient from "./structures/Client";
+import DiscordClient from "./Client";
 
 import Ags from "./commands/Utility/Ags";
 import Help from "./commands/Utility/Help";

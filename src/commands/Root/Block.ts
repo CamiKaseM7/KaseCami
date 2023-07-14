@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import { UserModel } from "../../database/models/UserModel";
-import Command, { Category } from "../../structures/Command";
+import Command, { Category } from "../Command";
 
 export default class Block extends Command {
     readonly category = Category.Root;

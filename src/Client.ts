@@ -9,8 +9,8 @@ import {
 } from "discord.js";
 import { REST } from "@discordjs/rest";
 
-import Command, { Category } from "./Command";
-import EventHandler from "../structures/EventHandler";
+import Command, { Category } from "./commands/Command";
+import EventHandler from "./handlers/EventHandler";
 
 export default class DiscordClient extends Client {
     public readonly commands = new Collection<string, Command>();
