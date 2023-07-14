@@ -61,7 +61,7 @@ export default class Ags extends Command {
 
     private static async claim(token: string, code: string): Promise<string> {
         try {
-            const data = await fetch(`https://app.argentinagameshow.com/custom/ajax/reward2.php?action=code&code=${code}`, {
+            const data = await fetch(`https://app.argentinagameshow.com/custom/ajax/rew.php?action=code&code=${code}`, {
                 headers: {
                     'Cookie': `PHPSESSID=${token}`
                 }
