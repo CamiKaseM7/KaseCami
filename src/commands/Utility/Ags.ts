@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "discord.js";
-import Command from "../Command";
+import Command, { Category } from "../Command";
 import { UserModel } from "../../database/models/UserModel";
 import { User } from "../../database/interfaces/UserInterface";
 import Tesseract from 'tesseract.js';
@@ -14,7 +14,7 @@ enum AgsResponses {
 const HAS_TOKEN_QUERY = { agsToken: { $ne: null } };
 
 export default class Ags extends Command {
-    // readonly category = Category.Test;
+    readonly category = Category.Test;
     readonly onlySlash = true;
 
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {

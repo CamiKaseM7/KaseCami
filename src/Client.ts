@@ -24,6 +24,10 @@ export default class DiscordClient extends Client {
         this.prefix = prefix;
     }
 
+    public isOwner(userId: string): boolean {
+        return this.whitelist.includes(userId);
+    }
+    
     public addCommand(command: Command): void {
         const name = command.commandBuilder().name;
         if (name == undefined) throw new Error("Missing name on command");

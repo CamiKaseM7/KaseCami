@@ -1,6 +1,7 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, ClientEvents, Events } from "discord.js";
 import { UserModel } from "../database/models/UserModel";
 import EventHandler from "./EventHandler";
+import { Category } from "../commands/Command";
 
 export default class InteractionHandler extends EventHandler<Events.InteractionCreate> {
     public async handle(args: ClientEvents[Events.InteractionCreate]): Promise<void> {
@@ -39,7 +40,7 @@ export default class InteractionHandler extends EventHandler<Events.InteractionC
 
         const command = this.client.commands.get(commandName);
         if (command == undefined) return;
-
+        if (command.category == Category.Root && !this.client.isOwner(interaction.user.id)) return;
         try {
             const result = command.slashExecutor(interaction);
             if (!result) return;
