@@ -22,10 +22,10 @@ export default class Ags extends Command {
         if (subcommand == "claim") return Ags.claimCommand(interaction);
         if (subcommand == "link") return Ags.linkCommand(interaction);
         if (subcommand == "check") {
-            const user = (await UserModel.findOne({userId: interaction.user.id}))!;
-            if (!user.agsToken) {interaction.reply("No esta linkeada la cuenta"); return};
+            const user = await UserModel.findOne({userId: interaction.user.id});
+            if (!user || !user.agsToken) {interaction.reply("No esta linkeada la cuenta"); return};
             const valid = await Ags.checktoken(user.agsToken);
-            interaction.reply(`El token ${valid ? '': 'no '}es valido`);
+            interaction.reply(`El token ${valid ? 'es': 'no es'} valido`);
         }
     }
 
