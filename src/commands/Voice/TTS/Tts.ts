@@ -89,7 +89,7 @@ export default class Tts extends Command {
                 VoiceId: voice,
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err);
             });
 
         if (!res) {

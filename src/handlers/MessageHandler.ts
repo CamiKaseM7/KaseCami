@@ -4,7 +4,7 @@ import Ags from "../commands/Utility/Ags";
 import { client } from "..";
 
 export default class MessageHandler extends EventHandler<Events.MessageCreate> {
-    public handle(args: ClientEvents[Events.MessageCreate]): void {
+    public async handle(args: ClientEvents[Events.MessageCreate]): Promise<void> {
         const [message] = args;
         
         try {
@@ -23,17 +23,11 @@ export default class MessageHandler extends EventHandler<Events.MessageCreate> {
             if (command.onlySlash) return;
             if (!command.messageExecutor) return;
 
-            const result = command.messageExecutor(message, msgArgs);
-            if (!result) return;
-
-            result.catch((err) => {
-                console.log(err);
-                message.reply("Ocurrio un error el ejecutar ese comando.");
-            });
+            await command.messageExecutor(message, msgArgs);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             message.reply("Ocurrio un error el ejecutar ese comando.").catch((err) => {
-                console.log(err);
+                console.error(err);
             });
         }
     }

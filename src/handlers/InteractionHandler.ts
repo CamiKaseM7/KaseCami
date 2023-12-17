@@ -16,41 +16,29 @@ export default class InteractionHandler extends EventHandler<Events.InteractionC
             return this.handleAutocomplete(interaction as AutocompleteInteraction);
     }
 
-    private handleAutocomplete(interaction: AutocompleteInteraction) {
+    private async handleAutocomplete(interaction: AutocompleteInteraction) {
         const commandName = interaction.commandName;
         const command = this.client.commands.get(commandName);
         if (command == undefined) return;
 
         try {
-            const result = command.autocomplete!(interaction);
-            if (!result) return;
-
-            result.catch((err) => {
-                console.log(err);
-                interaction.respond([]);
-            });
+            await command.autocomplete!(interaction);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             interaction.respond([]);
         }
     }
 
-    private handleCommand(interaction: ChatInputCommandInteraction) {
+    private async handleCommand(interaction: ChatInputCommandInteraction) {
         const commandName = interaction.commandName;
 
         const command = this.client.commands.get(commandName);
         if (command == undefined) return;
         if (command.category == Category.Root && !this.client.isOwner(interaction.user.id)) return;
         try {
-            const result = command.slashExecutor(interaction);
-            if (!result) return;
-
-            result.catch((err) => {
-                console.log(err);
-                interaction.reply("Ocurrio un error al ejecutar ese comando.");
-            });
+            await command.slashExecutor(interaction);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             interaction.reply("Ocurrio un error el ejecutar ese comando.");
         }
     }

@@ -33,7 +33,7 @@ export default class PlayerManager extends Collection<string, VoicePlayer> {
     public create(guildId: string): VoicePlayer {
         const player = new VoicePlayer(guildId);
         player.on("error", (error) => {
-            console.log(error);
+            console.error(error);
         });
         this.set(guildId, player);
         return player;
