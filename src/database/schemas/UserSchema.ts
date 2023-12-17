@@ -5,4 +5,5 @@ export const UserSchema = new Schema({
     blacklisted: {type: Boolean, required: true, default: false},
     agsToken: {type: String, required: false},
     reason: { type: String, required: false },
-});
+}, { strictQuery: true});
+
