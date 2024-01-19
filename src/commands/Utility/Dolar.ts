@@ -5,7 +5,7 @@ import Command, { Category } from "../Command";
 const DOLARHOY = "https://www.dolarhoy.com";
 
 export default class Dolar extends Command {
-    readonly category = Category.Utils;
+    readonly category = Category.Utility;
     readonly onlySlash = false;
 
 

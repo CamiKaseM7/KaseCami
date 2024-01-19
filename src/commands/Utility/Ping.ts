@@ -1,8 +1,9 @@
 import { getVoiceConnection, VoiceConnection } from "@discordjs/voice";
 import { ChatInputCommandInteraction, Message, SlashCommandBuilder } from "discord.js";
-import Command from "../Command";
+import Command, { Category } from "../Command";
 
 export default class Ping extends Command {
+    readonly category = Category.Utility;
     readonly onlySlash = false;
 
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {

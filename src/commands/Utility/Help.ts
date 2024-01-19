@@ -9,6 +9,7 @@ import {
 import Command, { Category } from "../Command";
 
 export default class Help extends Command {
+    readonly category = Category.Utility;
     readonly onlySlash = false;
 
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
