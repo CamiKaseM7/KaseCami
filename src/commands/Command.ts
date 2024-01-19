@@ -9,7 +9,7 @@ import DiscordClient from "../Client";
 export enum Category {
     Voice = "Voice",
     Moderation = "Moderation",
-    Utils = "Utils",
+    Utility = "Utility",
     Fun = "Fun",
     Config = "Config",
     Games = "Games",
