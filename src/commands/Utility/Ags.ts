@@ -68,8 +68,8 @@ export default class Ags extends Command {
             })
             const json: { text: string } = await data.json();
             return this.extractText(json.text).split("\n")[0];
-        } catch (e) {
-            console.log(e);
+        } catch (err) {
+            console.error(err);
             return "Error interno";
         }
     }
