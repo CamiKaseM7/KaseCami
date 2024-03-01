@@ -11,22 +11,14 @@ export default class Dolar extends Command {
 
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
         await interaction.deferReply();
-
-        const [blue, oficial, tarjeta] = await Promise.all(
-            [Dolar.getDolarBlue(), Dolar.getDolarOficial(), Dolar.getDolarTarjeta()]);
-
-            const embed = new EmbedBuilder()
-            .setTitle("Cotización del dolar")
-            .setColor("#278664")
-            .addFields(
-                { inline: true, name: "Dolar Blue", value: `Compra: ${blue.compra}\nVenta: ${blue.venta}` },
-                { inline: true, name: "Dolar Oficial", value: `Compra: ${oficial.compra}\nVenta: ${oficial.venta}` },
-                { inline: true, name: "Dolar Tarjeta", value: `Venta: ${tarjeta.venta}` });
-
-        await interaction.editReply({ embeds: [embed] });
+        Dolar.executor(interaction);
     }
 
     public async messageExecutor(message: Message, _args: string[]): Promise<void> {
+        Dolar.executor(message);
+    }
+
+    private static async executor(caller: Message | ChatInputCommandInteraction) {
         const [blue, oficial, tarjeta] = await Promise.all(
             [Dolar.getDolarBlue(), Dolar.getDolarOficial(), Dolar.getDolarTarjeta()]);
 
@@ -38,7 +30,10 @@ export default class Dolar extends Command {
                 { inline: false, name: "Dolar Oficial", value: `Compra: ${oficial.compra}\nVenta: ${oficial.venta}` },
                 { inline: false, name: "Dolar Tarjeta", value: `Venta: ${tarjeta.venta}` });
 
-        await message.reply({ embeds: [embed] });
+        if (caller instanceof Message)
+            await caller.reply({ embeds: [embed] });
+        else
+            await caller.editReply({ embeds: [embed] });
     }
 
     private static async getDolarBlue(): Promise<{ compra: string, venta: string }> {

@@ -52,9 +52,9 @@ client.registerEventHandler(Events.MessageCreate, new MessageHandler(client));
 
 client.login(process.env.CLIENT_TOKEN ?? "");
 
-client.once(Events.ClientReady, (client) => {
+client.once(Events.ClientReady, async (client) => {
     // console.log(generateDependencyReport());
     console.log(`Bot ${client.user.username} is ready.`);
-    (client as DiscordClient).deployCommands(process.env.TEST_SERVERS?.split("/") ?? []);
-    (client as DiscordClient).fetchCommands();
+    await (client as DiscordClient).deployCommands(process.env.TEST_SERVERS?.split("/") ?? []);
+    await (client as DiscordClient).fetchCommands();
 });

@@ -14,7 +14,7 @@ enum AgsResponses {
 const HAS_TOKEN_QUERY = { agsToken: { $ne: null } };
 
 export default class Ags extends Command {
-    readonly category = Category.Test;
+    readonly category = Category.Utility;
     readonly onlySlash = true;
 
     public async slashExecutor(interaction: ChatInputCommandInteraction): Promise<void> {
